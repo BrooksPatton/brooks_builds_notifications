@@ -54,4 +54,12 @@ function run(input, parameters) {
   sendMessage(message, 'g38_platte')
 
 	switchToChannel('brooks_patton')
+
+  // send messages to gAlumni
+  switchToSlackTeam(SLACK_TEAMS.gAlumni)
+  sendMessage(message, 'checkthisout')
+  sendMessage(message, 'g15_platte')
+  sendMessage(message, 'g18_platte')
+  sendMessage(message, 'g25_platte_alumni')
+  switchToChannel('Brooks Patton')
 }
