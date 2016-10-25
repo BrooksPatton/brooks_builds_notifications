@@ -2,13 +2,19 @@ const sys = Application('System Events')
 const TEST = true
 
 class Channel {
-  constructor(team, atPlatte, channelName, timeToStart, delayAmount) {
+  constructor(team, atPlatte, channelName, timeToStart, delayAmount, inPerson, whatToWorkOn, location, isStreaming) {
     this.name = team.name
     this.number = team.number
     this.atPlatte = atPlatte
     this.channelName = channelName
     this.myChannelName = team.myChannelName
     this.delay = delayAmount
+    this.atHere = team.atHere
+    this.inPerson = inPerson
+    this.whatToWorkOn = whatToWorkOn
+    this.location = location
+    this.timeToStart = timeToStart
+    this.isStreaming = isStreaming
   }
 
   init(test) {
@@ -41,11 +47,30 @@ class Channel {
 	}
 
   sendMessage() {
-		sys.keystroke(this.message)
+		sys.keystroke(this.generateMessage())
     delay(0.5)
 		sys.keyCode(36)
     delay(0.5)
 	}
+
+  generateMessage() {
+    // @here: I’ll be doing Brooks Builds again today starting at 11:45 am in :pikachu:. Today I’m working on my notification script. Please feel free to stop on by and say hi or ask any questions! If you can't make it in person then you can watch it live at https://www.twitch.tv/brookzerker.
+    // @here: I'm streaming Brooks Builds starting around 8 pm tonight. I'll be working on my notification script. Please feel free to watch at https://www.twitch.tv/brookzerker and ask any questions!
+    // @here: Steam is all done, you can find the archive at https://www.twitch.tv/brookzerker/aoriesth
+    var message = ''
+
+    if(this.atHere) message += '@here: '
+    if(this.inPerson && this.atPlatte) {
+      message += `I’ll be doing Brooks Builds again today starting at ${this.timeToStart} in ${this.location}. Today I'm working on ${this.whatToWorkOn}. Please feel free to stop on by and say hi or ask any questions!${this.isStreaming ? " If you can't make it in person then you can watch it live at https://www.twitch.tv/brookzerker." : ''}`
+    } else if(this.isStreaming) {
+      message += `I’ll be doing Brooks Builds again today starting at ${this.timeToStart}. Today I'm working on ${this.whatToWorkOn}. You can watch me live at https://www.twitch.tv/brookzerker and ask any questions or just say hi!`
+    } else {
+      // I'm not available anywhere, so don't send any messages
+      message = ''
+    }
+
+    return message
+  }
 }
 
 function launchSlack() {
@@ -69,19 +94,22 @@ function run(input, parameters) {
   const denverDevs = {
     name: 'Denver Devs',
     number: 1,
-    myChannelName: 'brooks'
+    myChannelName: 'brooks',
+    AtHere: false
   }
 
   const gStudent = {
     name: 'gStudent',
     number: 2,
-    myChannelName: 'Brooks Patton'
+    myChannelName: 'Brooks Patton',
+    atHere: true
   }
 
   const gAlumni = {
     name: 'gAlumni',
     number: 3,
-    myChannelName: 'Brooks Patton'
+    myChannelName: 'Brooks Patton',
+    atHere: true
   }
 
   const channelsToSendMessageTo = [
@@ -139,31 +167,14 @@ function run(input, parameters) {
 
 	const isStreaming = input[0] === 'true' ? true : false
 	const location = input[4]
-	const sessionLength = input[3]
+	const canPeopleJoinMeInPerson = input[3].toLowerCase() === 'true' ? true : false
 	const timeToStart = input[2]
 	const whatToWorkOn = input[1]
-  const SLACK_TEAMS = {
-    denverDevs: 4,
-    gStudent: 5,
-    gAlumni: 8
-  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-  const delayAmount = launchSlack()
+const delayAmount = launchSlack()
 
   const channels = channelsToSendMessageTo.reduce(function (arr, channel) {
-    arr.push(new Channel(channel.team, channel.atPlatte, channel.channelName, timeToStart, delayAmount))
+    arr.push(new Channel(channel.team, channel.atPlatte, channel.channelName, timeToStart, delayAmount, canPeopleJoinMeInPerson, whatToWorkOn, location, isStreaming))
 
     return arr
   }, [])
@@ -171,36 +182,4 @@ function run(input, parameters) {
   channels.forEach(function(channel) {
     channel.init(TEST)
   })
-
-
-
-  /*
-	// send message to denver devs
-	switchToSlackTeam(SLACK_TEAMS.denverDevs)
-
-	sendMessage(message, 'slackbot')
-
-	switchToChannel('brooks_patton')
-
-	// send message to gstudent
-	switchToSlackTeam(SLACK_TEAMS.gStudent)
-
-	sendMessage(message, 'g31_platte_general')
-	sendMessage(message, 'g25_platte_general')
-	sendMessage(message, 'g29_platte_general')
-  if(isStreaming) sendMessage(message, 'g30_goldentriangle')
-  sendMessage(message, 'g38_platte')
-
-	switchToChannel('brooks_patton')
-
-  // send messages to gAlumni
-  switchToSlackTeam(SLACK_TEAMS.gAlumni)
-
-  sendMessage(message, 'checkthisout')
-  sendMessage(message, 'g15_platte')
-  sendMessage(message, 'g18_platte')
-  sendMessage(message, 'g25_platte_alumni')
-
-  switchToChannel('Brooks Patton')
-  */
 }
