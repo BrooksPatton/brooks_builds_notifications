@@ -1,29 +1,37 @@
 const sys = Application('System Events')
+const TEST = true
 
 class Channel {
-  constructor(team, atPlatte, channelName) {
+  constructor(team, atPlatte, channelName, timeToStart, delayAmount) {
     this.name = team.name
     this.number = team.number
     this.atPlatte = atPlatte
     this.channelName = channelName
     this.myChannelName = team.myChannelName
-
-    this.message = `@here I'm doing brooks builds today starting around ${timeToStart} at ${location} for ${sessionLength}. Today I'll be working on ${whatToWorkOn}. ${isStreaming ? "If you can't make it join me online at https://www.twitch.tv/brookzerker" : ""}`
+    this.delay = delayAmount
   }
 
-  sendMessage() {
+  init(test) {
     this.switchToSlackTeam()
-    this.switchToChannel()
+
+    if(test) {
+      this.switchToChannel('slackbot')
+    } else {
+      this.switchToChannel()
+    }
+
     this.sendMessage()
     this.switchToChannel(this.myChannelName)
   }
 
   switchToSlackTeam() {
     sys.keystroke(this.number, {using: 'command down'})
-    delay(10)
+    delay(this.delay)
 	}
 
-  switchToChannel(channel = this.channelName) {
+  switchToChannel(channel) {
+    channel = channel || this.channelName
+
 		sys.keystroke('k', {using: 'command down'})
 		delay(0.5)
 		sys.keystroke(channel)
@@ -38,6 +46,23 @@ class Channel {
 		sys.keyCode(36)
     delay(0.5)
 	}
+}
+
+function launchSlack() {
+  const slackApp = Application('Slack.app')
+
+  var amountToDelay = .5
+
+  if(slackApp.running()) {
+    slackApp.activate()
+    delay(amountToDelay)
+  } else {
+    slackApp.activate()
+    amountToDelay = 5
+    delay(amountToDelay)
+  }
+
+  return amountToDelay
 }
 
 function run(input, parameters) {
@@ -127,17 +152,6 @@ function run(input, parameters) {
 
 
 
-  function launchSlack() {
-    const slackApp = Application('Slack.app')
-
-    if(slackApp.running()) {
-      slackApp.activate()
-      delay(0.5)
-    } else {
-      slackApp.activate()
-      delay(5)
-    }
-  }
 
 
 
@@ -145,16 +159,17 @@ function run(input, parameters) {
 
 
 
-  launchSlack()
+
+  const delayAmount = launchSlack()
 
   const channels = channelsToSendMessageTo.reduce(function (arr, channel) {
-    arr.push(new Channel(channel.team, channel.atPlatte, channel.channelName))
+    arr.push(new Channel(channel.team, channel.atPlatte, channel.channelName, timeToStart, delayAmount))
 
     return arr
   }, [])
 
   channels.forEach(function(channel) {
-    channel.sendMessage()
+    channel.init(TEST)
   })
 
 
