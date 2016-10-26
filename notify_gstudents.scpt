@@ -54,8 +54,6 @@ class Channel {
 	}
 
   generateMessage() {
-    // @here: I’ll be doing Brooks Builds again today starting at 11:45 am in :pikachu:. Today I’m working on my notification script. Please feel free to stop on by and say hi or ask any questions! If you can't make it in person then you can watch it live at https://www.twitch.tv/brookzerker.
-    // @here: I'm streaming Brooks Builds starting around 8 pm tonight. I'll be working on my notification script. Please feel free to watch at https://www.twitch.tv/brookzerker and ask any questions!
     // @here: Steam is all done, you can find the archive at https://www.twitch.tv/brookzerker/aoriesth
     var message = ''
 
