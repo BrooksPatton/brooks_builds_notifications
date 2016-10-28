@@ -17,7 +17,9 @@ class Channel {
     this.isStreaming = isStreaming
   }
 
-  init(test) {
+  init(archiveUrl, test) {
+    this.archiveUrl = archiveUrl
+
     this.switchToSlackTeam()
 
     if(test) {
@@ -58,7 +60,9 @@ class Channel {
     var message = ''
 
     if(this.atHere) message += '@here: '
-    if(this.inPerson && this.atPlatte) {
+    if(this.archiveUrl) {
+      message += `The stream is all done. You can watch the archive at ${this.archiveUrl} if you missed it.`
+    } else if(this.inPerson && this.atPlatte) {
       message += `I’ll be doing Brooks Builds again today starting at ${this.timeToStart} in ${this.location}. Today I'm working on ${this.whatToWorkOn}. Please feel free to stop on by and say hi or ask any questions!${this.isStreaming ? " If you can't make it in person then you can watch it live at https://www.twitch.tv/brookzerker." : ''}`
     } else if(this.isStreaming) {
       message += `I’ll be doing Brooks Builds again today starting at ${this.timeToStart}. Today I'm working on ${this.whatToWorkOn}. You can watch me live at https://www.twitch.tv/brookzerker and ask any questions or just say hi!`
@@ -168,6 +172,7 @@ function run(input, parameters) {
 	const canPeopleJoinMeInPerson = input[3].toLowerCase() === 'true' ? true : false
 	const timeToStart = input[2]
 	const whatToWorkOn = input[1]
+  const archiveUrl = input[5]
 
 const delayAmount = launchSlack()
 
@@ -178,6 +183,6 @@ const delayAmount = launchSlack()
   }, [])
 
   channels.forEach(function(channel) {
-    channel.init(TEST)
+    channel.init(archiveUrl, TEST)
   })
 }
