@@ -1,5 +1,5 @@
 const sys = Application('System Events')
-const TEST = true
+const TEST = false
 
 class Channel {
   constructor(team, atPlatte, channelName, timeToStart, delayAmount, inPerson, whatToWorkOn, location, isStreaming) {
