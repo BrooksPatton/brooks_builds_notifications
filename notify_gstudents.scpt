@@ -159,6 +159,11 @@ function run(input, parameters) {
       team: gAlumni,
       channelName: 'g25_platte_alumni',
       atPlatte: false
+    },
+    {
+      team: gStudent,
+      channelName: 'g41_platte',
+      atPlatte: true
     }
   ]
 
