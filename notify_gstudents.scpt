@@ -41,18 +41,18 @@ class Channel {
     channel = channel || this.channelName
 
 		sys.keystroke('k', {using: 'command down'})
-		delay(0.5)
+		delay(3)
 		sys.keystroke(channel)
-		delay(0.5)
+		delay(3)
 		sys.keyCode(36)
-    delay(0.5)
+    delay(3)
 	}
 
   sendMessage() {
 		sys.keystroke(this.generateMessage())
-    delay(0.5)
+    delay(3)
 		sys.keyCode(36)
-    delay(0.5)
+    delay(3)
 	}
 
   generateMessage() {
@@ -78,14 +78,14 @@ class Channel {
 function launchSlack() {
   const slackApp = Application('Slack.app')
 
-  var amountToDelay = .5
+  var amountToDelay = 3
 
   if(slackApp.running()) {
     slackApp.activate()
     delay(amountToDelay)
   } else {
     slackApp.activate()
-    amountToDelay = 5
+    amountToDelay = 15
     delay(amountToDelay)
   }
 
