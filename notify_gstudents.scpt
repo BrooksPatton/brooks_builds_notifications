@@ -122,23 +122,13 @@ function run(input, parameters) {
     },
     {
       team: gStudent,
-      channelName: 'g31_platte_general',
+      channelName: 'denver_students',
       atPlatte: true
     },
     {
       team: gAlumni,
       channelName: 'g29_general',
       atPlatte: false
-    },
-    {
-      team: gStudent,
-      channelName: 'g30_goldentriangle',
-      atPlatte: false
-    },
-    {
-      team: gStudent,
-      channelName: 'g38_platte',
-      atPlatte: true
     },
     {
       team: gAlumni,
@@ -159,12 +149,7 @@ function run(input, parameters) {
       team: gAlumni,
       channelName: 'g25_platte_alumni',
       atPlatte: false
-    },
-    {
-      team: gStudent,
-      channelName: 'g41_platte',
-      atPlatte: true
-    }
+    }    
   ]
 
 	const isStreaming = input[0] === 'true' ? true : false
